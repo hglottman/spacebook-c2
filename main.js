@@ -32,15 +32,14 @@ var SpacebookApp = function () {
       var post = posts[i];
 
       var commentsContainer = '<div class="comments-container">' +
-        '<input type="text" class="comment-name">' +
-        '<button class="btn btn-primary add-comment">Post Comment</button>' +
-        '<div class="comments"></div>' + '</div>';
+      '<input type="text" class="comment-name">' +
+      '<button class="btn btn-primary add-comment">Post Comment</button>' +
+      '<div class="comments"></div>' + '</div>'
 
       $posts.append('<div class="post" data-id=' + post.id + '>'
         + '<a href="#" class="remove">remove post</a> ' +
         '<a href="#" class="show-comments">comments</a>' +
         post.text + commentsContainer + '</div>');
-
     }
   }
 
@@ -69,8 +68,14 @@ var SpacebookApp = function () {
     for (var i = 0; i < post.comments.length; i++) {
       var text = post.comments[i].commentText;
       var commentIdCurrent = post.comments[i].commentId;
-      $comments.append('<div class="commentNew" data-id=' + commentIdCurrent + '>' + text
-        + '<button class="btn btn-summary remove-comment">remove Comment</button></div>');
+      // $comments.append('<div class="commentNew" data-id=' + commentIdCurrent + '>' + text
+      //   + '<button class="btn btn-summary remove-comment">remove Comment</button></div>');
+
+      var source = $('#comment-template').html();
+      var template = Handlebars.compile(source);
+      var newHTML = template({commentIdCurrent:commentIdCurrent, text:text});
+      // append our new html to the page
+      $comments.append(newHTML);
     }
 
 
@@ -106,20 +111,16 @@ var SpacebookApp = function () {
     //begin work on array
     var post = _findPostById(postId)
 
-        for (var j = 0; j < post.comments.length; j++) {
-          var commentId = $(removeButton).closest('.commentNew').data().id;
-          if (post.comments[j].commentId === commentId) {
-            post.comments.splice(j, 1);
-            console.log(post);
+    for (var j = 0; j < post.comments.length; j++) {
+      var commentId = $(removeButton).closest('.commentNew').data().id;
+      if (post.comments[j].commentId === commentId) {
+        post.comments.splice(j, 1);
+        console.log(post);
 
-          }
-        }
       }
-    
+    }
+  }
 
-    //--------------------------------------------
-    //beging work on render 
-  
 
   var toggleComments = function (currentPost) {
     //the post's div
@@ -173,6 +174,7 @@ $('.posts').on('click', '.remove-comment', function () {
   app.removeComment(this);
   app.renderComments(this);
 });
+
 
 
 
